@@ -36,6 +36,19 @@ architecture structural of IF_ID_Register is
     begin
         
         g_PCReg: register_N
-        
+            port map(
+                i_Clock     => i_CLK,
+                i_Reset     => i_RST,
+                i_WriteEn   => '1',
+                i_Data      => i_PCNext,
+                o_Data      => o_PCNext);
+
+        g_IMemReg: register_N
+        port map(
+            i_Clock     => i_CLK,
+            i_Reset     => i_RST,
+            i_WriteEn   => '1',
+            i_Data      => i_IMem,
+            o_Data      => o_IMem);
 
 end structural;
