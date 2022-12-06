@@ -146,20 +146,24 @@ architecture structure of MIPS_Processor is
 
   component ControlUnit is 
     port(i_opCode           : in std_logic_vector(5 downto 0);
-        i_funct            : in std_logic_vector(5 downto 0);
-        ALUControlOp       : out std_logic_vector(4 downto 0);
-        RegDest            : out std_logic_vector(1 downto 0);
-        RegWr              : out std_logic;
-        extSel             : out std_logic;
-        ALUsrc             : out std_logic;
-        BranchType         : out std_logic;
-        BranchInstr        : out std_logic;
-        JumpInstr          : out std_logic;
-        JumpReg            : out std_logic;
-        DMemWr             : out std_logic;
-        Write_Data_Sel     : out std_logic_vector(1 downto 0);
-        Halt               : out std_logic);
-  end component;
+         i_funct            : in std_logic_vector(5 downto 0);
+         shiftType          : out std_logic_vector(1 downto 0);
+         ALUop              : out std_logic_vector(3 downto 0);
+         ALUslt             : out std_logic;
+         nAdd_Sub           : out std_logic;
+         unsignedSel        : out std_logic;
+         RegDest            : out std_logic_vector(1 downto 0);
+         RegWr              : out std_logic;
+         extSel             : out std_logic;
+         ALUsrc             : out std_logic;
+         BranchType         : out std_logic;
+         BranchInstr        : out std_logic;
+         JumpInstr          : out std_logic;
+         JumpReg            : out std_logic;
+         DMemWr             : out std_logic;
+         Write_Data_Sel     : out std_logic_vector(1 downto 0);
+         Halt               : out std_logic);
+    end component;
 
   -------------------------
   ------ Register File ----
@@ -190,7 +194,7 @@ architecture structure of MIPS_Processor is
   end component;
 
   -------------------------------------
-  ------ ALU and ALU Control Unit -----
+  ----------------- ALU  --------------
   -------------------------------------
 
   component ALU is 
@@ -206,17 +210,6 @@ architecture structure of MIPS_Processor is
         o_ALUzero            : out std_logic;
         o_Overflow           : out std_logic;
         o_ALUresult          : out std_logic_vector(31 downto 0));
-  end component;
-
-  component ALUControlUnit is
-      generic(K   : integer := 5; L   : integer := 4; M   : integer := 2);
-      port(
-          i_ALUControlOp  : in std_logic_vector(K-1 downto 0);    -- ALU Control Unit input
-          o_shiftType     : out std_logic_vector(M-1 downto 0);   -- Shift type selector
-          o_ALUop         : out std_logic_vector(L-1 downto 0);   -- ALUop selector
-          o_ALUslt        : out std_logic;                        -- ALUslt selector
-          o_nAdd_Sub      : out std_logic;                        -- Add/Sub selector
-          o_unsignedSel   : out std_logic);                       -- Signed/unsigned selector
   end component;
 
   -------------------------------------
@@ -388,8 +381,12 @@ begin
 
   g_ControlUnit: ControlUnit
     port map(i_opCode => s_Inst(31 downto 26),      
-            i_funct => s_Inst(5 downto 0),      
-            ALUControlOp => s_ALUControlOp,
+            i_funct => s_Inst(5 downto 0),
+            shiftType => s_shiftType,
+            ALUop => s_ALUop,
+            ALUslt => s_ALUslt,
+            nAdd_Sub => s_nAdd_Sub,
+            unsignedSel => s_UnsignedSel,
             RegDest => s_RegDest,
             RegWr => s_RegWr,         
             extSel => s_extSel,      
@@ -426,14 +423,6 @@ begin
     port map(i_extSelect => s_extSel,
              i_data16 => s_Inst(15 downto 0),  
              o_data32 => s_extendedImmediate);
-
-  g_ALUControlUnit: ALUControlUnit
-    port map(i_ALUControlOp => s_ALUControlOp,
-             o_shiftType => s_shiftType,   
-             o_ALUop => s_ALUop,        
-             o_ALUslt => s_ALUslt,      
-             o_nAdd_Sub => s_nAdd_Sub,   
-             o_unsignedSel => s_UnsignedSel);
 
   s_DMemData <= s_readData2;
 
