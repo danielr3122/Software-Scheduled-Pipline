@@ -15,6 +15,11 @@ use IEEE.std_logic_1164.all;
 entity ControlUnit is 
     port(i_opCode           : in std_logic_vector(5 downto 0);
          i_funct            : in std_logic_vector(5 downto 0);
+         shiftType          : out std_logic_vector(1 downto 0);
+         ALUop              : out std_logic_vector(3 downto 0);
+         ALUslt             : out std_logic;
+         nAdd_Sub           : out std_logic;
+         unsignedSel        : out std_logic;
          ALUControlOp       : out std_logic_vector(4 downto 0);
          RegDest            : out std_logic_vector(1 downto 0);
          RegWr              : out std_logic;
@@ -71,6 +76,45 @@ begin
                         --b"xxxxx" when b"010100_000000", -- halt
                         b"11000" when b"011111_000000", -- Repl.qb
                         b"00000" when others;
+
+    -- Setting shiftType Control Signal
+    with SelectVal select
+        shiftType <= b"00" when b"000000_000000",
+                     b"01" when b"000000_000010",
+                     b"10" when b"000000_000011",
+                     b"00" when others;
+
+    -- Setting ALUop Control Signal
+    with SelectVal select
+        ALUop <= b"0000" when b"000000_100000" | b"000000_100001" | b"001000_000000" |
+                              b"001001_000000" | b"100011_000000" | b"101011_000000",
+                 b"0001" when b"000000_100010" | b"000000_100011" | b"000000_101010" |
+                              b"000100_000000" | b"000101_000000" | b"001010_000000",
+                 b"0010" when b"000000_100100" | b"001100_000000",
+                 b"0011" when b"000000_100111",
+                 b"0100" when b"000000_100101" | b"001101_000000",
+                 b"0101" when b"000000_100110" | b"001110_000000",
+                 b"0110" when b"000000_000000" | b"000000_000010" | b"000000_000011",
+                 b"0111" when b"000000_011111",
+                 b"1000" when b"001111_000000",
+                 b"1001" when b"011111_000000",
+                 b"0000" when others;
+
+    -- Setting ALUslt Control Signal
+    with SelectVal select
+        ALUslt <= '1' when b"000000_101010" | b"001010_000000",
+                  '0' when others;
+
+    -- Setting nAdd_Sub Control Signal
+    with SelectVal select
+        nAdd_Sub <= '1' when b"000000_100010" | b"000000_100011" | b"000000_101010",
+                             b"000100_000000" | b"000101_000000" | b"001010_000000",
+                    '0' when others;
+
+    -- Setting unsignedSel Control Signal
+    with SelectVal select
+        unsignedSel <= '1' when b"000000_100001" | b"000000_100011" | b"001001_000000",
+                       '0' when others;
 
     -- Setting RegDest Control Signal
     with SelectVal select                                                                               --<NOT-Line 77>

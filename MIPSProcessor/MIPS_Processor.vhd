@@ -223,6 +223,9 @@ architecture structure of MIPS_Processor is
   ------- PC Addressing Signals -------
   -------------------------------------
 
+  signal s_pcSelect         : std_logic;
+  signal s_sameData         : std_logic;
+  signal s_pcInput          : std_logic_vector(31 downto 0);
   signal s_pcNext           : std_logic_vector(31 downto 0);
   signal s_jumpAddr28       : std_logic_vector(27 downto 0);
   signal s_jumpAddr32       : std_logic_vector(31 downto 0);
@@ -293,6 +296,7 @@ begin
              we   => iInstLd,
              q    => s_Inst);
   
+  -- TODO: move to mem stage
   DMem: mem
     generic map(ADDR_WIDTH => ADDR_WIDTH,
                 DATA_WIDTH => N)
@@ -307,16 +311,43 @@ begin
 
   -- TODO: Implement the rest of your processor below this comment! 
 
+--------------------------
+------- Fetch Stage ------
+--------------------------
+
+  s_pcSelect <= '1' when (s_BranchType xor s_sameData) and s_branchInstr else
+                '1' when s_JumpInstr else
+                '1' when s_JumpReg else
+                '0';
+
+  g_PCPlusFour: PCPlusFour
+    port map(i_d0 => s_NextInstAddr,
+            o_o  => s_pcNext);
+
+  g_PCMux: mux2t1_32b
+    port map(i_s   => s_pcSelect,
+             i_d0  => s_pcNext,
+             i_d1  => s_muxToPC,
+             o_o   => s_pcInput);
+
   g_PC: register_N
     port map(i_Clock    => iCLK,
              i_Reset    => iRST,
              i_WriteEn  => '1',
-             i_Data     => s_muxToPC,
+             i_Data     => s_pcInput,
              o_Data     => s_NextInstAddr);
 
-  g_PCPlusFour: PCPlusFour
-    port map(i_d0 => s_NextInstAddr,
-             o_o  => s_pcNext);
+  g_IF_ID: IF_ID_Register
+    port map(i_CLK    => i_CLK,
+             i_RST    => i_RST,
+             i_IMem   => s_Inst,
+             i_PCNext => s_pcNext,
+             o_Imem   => 
+             o_PCNext =>);
+
+---------------------------
+------- Decode Stage ------
+---------------------------
 
   g_ShiftLeftTwo_28: shiftLeftTwo_28
   port map(i_d0 => s_Inst(25 downto 0),
@@ -333,7 +364,8 @@ begin
              i_d1 => s_branchImmediate,
              o_o  => s_branchResult);
 
-  s_xor <= s_ALUzero xor s_BranchType;
+  s_sameData <= '1' when (s_readData1 = s_readData2) else '0';
+  s_xor <= s_sameData xor s_BranchType;
   s_and <= s_xor and s_BranchInstr;
 
   g_BranchMux: mux2t1_32b
@@ -370,6 +402,7 @@ begin
             Write_Data_Sel => s_Write_Data_Sel,
             Halt => s_Halt);
 
+  -- TODO: put it in writeback stage
   g_WriteRegMux: mux4t1_5
     port map(i_d0 => s_Inst(20 downto 16),
             i_d1 => b"11111",
@@ -402,13 +435,19 @@ begin
              o_nAdd_Sub => s_nAdd_Sub,   
              o_unsignedSel => s_UnsignedSel);
 
+  s_DMemData <= s_readData2;
+
+  -- TODO: add id/ex reg
+
+----------------------------
+------- Execute Stage ------
+----------------------------
+
   g_ALUSrcMux: mux2t1_32b
     port map(i_s => s_ALUsrc, 
              i_d0 => s_readData2,
              i_d1 => s_extendedImmediate,
              o_o => s_ALUSrcMuxOut);
-
-  s_DMemData <= s_readData2;
 
   g_ALU: ALU
     port map(i_opA => s_readData1,          
