@@ -7,7 +7,6 @@ arr:.word  19, 91, 25, 41, 87, 55, 68, 13, 83, 49
 
 .text
 main:
-    nop
 	lui $s0, 0x1001		# array address
 	addi $s1, $zero, 10	# n
 	j bubblesort
@@ -21,10 +20,12 @@ bubblesort:
 	
 loop1:
     nop
+    nop
 	addi $t1, $zero, 0	# j
 	j loop2
 
 	loop1cond:
+        nop
         nop
 		addi $t0, $t0, 1
         nop
@@ -76,6 +77,7 @@ loop2:
 	bne $t5, $zero, swap
 	
 	loop2cond:
+        nop
         nop
 		addi $t1, $t1, 1	# j++
 		addi $t3, $s1, -1	# x = n - 1
