@@ -43,6 +43,7 @@ loop2:
 	# arr[j]
     nop
     nop
+    nop
 	sll $s2, $t1, 2
     nop
     nop
