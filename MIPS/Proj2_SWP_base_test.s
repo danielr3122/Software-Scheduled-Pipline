@@ -8,6 +8,7 @@ addi 	$s0, $zero, 1   # $s0 = 1
 addiu	$s1, $zero, 1   # $s1 = 1
 nop # s1 <= EX
 nop
+nop
 
 addu	$s2, $s0, $s1   # $s2 = 2 #dp: s1 s0
 #add	    $s3, $s0, $s1   # $s3 = 2 #dp: s1 s0
@@ -16,3 +17,4 @@ addu	$s2, $s0, $s1   # $s2 = 2 #dp: s1 s0
 #
 #addi 	$s6, $zero, -1  # $s6 = -1 
 #sra	    $s6, $s6, 1     # $s6 = -1 #dp: s6
+halt
