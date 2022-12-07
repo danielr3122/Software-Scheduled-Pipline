@@ -4,7 +4,6 @@
 
 .data
 arr:.word  19, 91, 25, 41, 87, 55, 68, 13, 83, 49
-space: .asciiz " "
 
 .text
 main:
@@ -33,7 +32,7 @@ loop1:
 	
 add $t2, $zero, $s0
 addi $t0, $zero, 0
-j print
+j  exit
 	
 loop2:
 	# arr[j]
@@ -96,18 +95,5 @@ swap:
 	sw $t7, 0($s2)
 	j loop2cond
 
-print:
-	addi $v0, $zero, 1
-	lw $a0, 0($t2)
-	syscall
-	addi $v0, $zero, 4
-	addi $a0, $zero, 32
-	syscall
-
-	addi $t2, $t2, 4	# increment in the array
-	addi $t0, $t0, 1 	# i+1
-    nop
-    nop
-    nop
-	bne $t0, $s1, print	# i != n
+ exit:
 	halt
