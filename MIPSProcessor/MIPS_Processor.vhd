@@ -198,7 +198,7 @@ architecture structure of MIPS_Processor is
   -------------------------------------
 
   component ALU is 
-    port(i_opA                : in std_logic_vector(31 downto 0);
+    port(i_opA               : in std_logic_vector(31 downto 0);
         i_opB                : in std_logic_vector(31 downto 0);
         i_RQBimm             : in std_logic_vector(7 downto 0);
         i_shamt              : in std_logic_vector(4 downto 0);

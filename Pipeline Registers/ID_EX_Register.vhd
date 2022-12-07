@@ -12,8 +12,8 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity ID_EX_Register is
-    port(i_CLK               : in std_logic;
-         i_RST               : in std_logic;
+    port(i_CLK                  : in std_logic;
+         i_RST                  : in std_logic;
          i_ID_PCNext            : in std_logic_vector(31 downto 0);
          i_ID_Halt              : in std_logic;
          i_ID_DMemWr            : in std_logic;
@@ -61,7 +61,7 @@ architecture structural of ID_EX_Register is
 
     begin
         
-        g_PCReg: register_N
+        g_PCNext: register_N
             port map(
                 i_Clock     => i_CLK,
                 i_Reset     => i_RST,
