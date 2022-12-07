@@ -77,7 +77,8 @@ loop2:
     nop
     nop
 	bne $t5, $zero, swap
-	
+	nop
+
 	loop2cond:
         nop
         nop
@@ -95,6 +96,7 @@ loop2:
         nop
         nop
 		bne $t4, $zero, loop2
+        nop
 
 	j loop1cond
 	
