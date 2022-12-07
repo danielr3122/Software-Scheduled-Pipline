@@ -42,7 +42,6 @@ MAIN:
     not	    $s5, $s1            # $s5 = 0x0000_0000
     nop
     nop
-    nop
     nor	    $s6, $s5, $s4       # $s6 = 0xFFFF_0000
     xor	    $s7, $s0, $s1       # $s7 = 0x0000_FFFF
     xori	$t0, $s1, 0xFFFF    # $t0 = 0xFFFF_0000
@@ -67,12 +66,10 @@ MAIN:
     and     $s5, $s5, $zero
     nop
     nop
-    nop
 
     # Comparison
     slt     $s1, $t4, $s5 # t4 = FFFF_FFFF, s5 = 0
     slti    $s2, $s5, 1
-    nop
     nop
     nop
 
@@ -93,7 +90,6 @@ B2:
     halt
 
 METHOD:
-    nop
     nop
     nop
     jr  $ra
