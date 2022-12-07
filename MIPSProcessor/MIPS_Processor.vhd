@@ -313,7 +313,10 @@ architecture structure of MIPS_Processor is
   -------------------------------------
 
   signal s_jumpToPC,
-         s_IF_PCNext    : std_logic_vector(31 downto 0);
+         s_IF_PCNext,
+         s_IF_PCMuxOut    : std_logic_vector(31 downto 0);
+
+  signal s_IF_pcSelect : std_logic;
 
   -------------------------------------
   ---------- Decode Signals -----------
@@ -440,11 +443,22 @@ begin
 ------- Fetch Stage ------
 --------------------------
 
+  s_IF_pcSelect <= '1' when s_ID_JumpInstr else
+                   '1' when s_ID_JumpReg else
+                   '1' when s_ID_and else
+                   '0';
+
+  g_PCMux: mux2t1_32b
+    port map(i_d0 => s_IF_PCNext,
+             i_d1 => s_ID_muxToPC,
+             i_s  => s_IF_pcSelect,
+             o_o  => s_IF_PCMuxOut);
+
   g_PC: register_N
     port map(i_Clock    => iCLK,
              i_Reset    => iRST,
              i_WriteEn  => '1',
-             i_Data     => s_ID_muxToPC,
+             i_Data     => s_IF_PCMuxOut,
              o_Data     => s_NextInstAddr);
 
   g_PCPlusFour: PCPlusFour
