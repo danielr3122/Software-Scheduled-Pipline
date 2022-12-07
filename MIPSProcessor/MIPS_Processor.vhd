@@ -591,7 +591,7 @@ begin
 ---------------------------
 
   g_ALUsrcMux: mux2t1_32b
-    port map(i_d0 => s_EX_readData1,
+    port map(i_d0 => s_EX_readData2,
              i_d1 => s_EX_extendedImm,
              i_s  => s_EX_ALUsrc,
              o_o  => s_EX_ALUsrcMuxOut);
