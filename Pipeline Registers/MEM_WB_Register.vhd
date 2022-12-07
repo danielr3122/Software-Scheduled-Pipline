@@ -46,8 +46,19 @@ architecture structural of MEM_WB_Register is
              o_Data     : out std_logic_vector(N-1 downto 0));
     end component;
 
+    signal it_MEM_Halt,
+           it_MEM_RegWr,
+           it_MEM_Ovfl,
+           ot_WB_Halt,
+           ot_WB_RegWr,
+           ot_WB_Ovfl : std_logic_vector(0 downto 0);
+
     begin
         
+        it_MEM_Halt(0) <= i_MEM_Halt;
+        it_MEM_RegWr(0) <= i_MEM_RegWr;
+        it_MEM_Ovfl(0) <= i_MEM_Ovfl;
+
         g_PCNext: register_N
             port map(
                 i_Clock     => i_CLK,
@@ -57,14 +68,16 @@ architecture structural of MEM_WB_Register is
                 o_Data      => o_WB_PCNext);
         
         g_Halt: register_N
+            generic map(N => 1)
             port map(
                 i_Clock     => i_CLK,
                 i_Reset     => i_RST,
                 i_WriteEn   => '1',
-                i_Data      => i_MEM_Halt,
-                o_Data      => o_WB_Halt);
+                i_Data      => it_MEM_Halt,
+                o_Data      => ot_WB_Halt);
         
         g_Write_Data_Sel: register_N
+            generic map(N => 2)
             port map(
                 i_Clock     => i_CLK,
                 i_Reset     => i_RST,
@@ -73,20 +86,22 @@ architecture structural of MEM_WB_Register is
                 o_Data      => o_WB_Write_Data_Sel);
         
         g_RegWr: register_N
+            generic map(N => 1)
             port map(
                 i_Clock     => i_CLK,
                 i_Reset     => i_RST,
                 i_WriteEn   => '1',
-                i_Data      => i_MEM_RegWr,
-                o_Data      => o_WB_RegWr);
+                i_Data      => it_MEM_RegWr,
+                o_Data      => ot_WB_RegWr);
         
         g_Ovfl: register_N
+            generic map(N => 1)
             port map(
                 i_Clock     => i_CLK,
                 i_Reset     => i_RST,
                 i_WriteEn   => '1',
-                i_Data      => i_MEM_Ovfl,
-                o_Data      => o_WB_Ovfl);
+                i_Data      => it_MEM_Ovfl,
+                o_Data      => ot_WB_Ovfl);
         
         g_ALUout: register_N
             port map(
@@ -105,11 +120,16 @@ architecture structural of MEM_WB_Register is
                 o_Data      => o_WB_DMemOut);
         
         g_RegWrAddr: register_N
+            generic map(N => 5)
             port map(
                 i_Clock     => i_CLK,
                 i_Reset     => i_RST,
                 i_WriteEn   => '1',
                 i_Data      => i_MEM_RegWrAddr,
                 o_Data      => o_WB_RegWrAddr);
+
+        o_WB_Halt <= ot_WB_Halt(0);
+        o_WB_RegWr <= ot_WB_RegWr(0);
+        o_WB_Ovfl <= ot_WB_Ovfl(0);
 
 end structural;
