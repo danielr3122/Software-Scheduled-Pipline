@@ -7,6 +7,7 @@ arr:.word  19, 91, 25, 41, 87, 55, 68, 13, 83, 49
 
 .text
 main:
+    nop
 	lui $s0, 0x1001		# array address
 	addi $s1, $zero, 10	# n
 	j bubblesort
