@@ -7,6 +7,7 @@
 j MAIN
 
 MAIN:
+    nop
     # Arithmetic
     addi 	$s0, $zero, 1   # $s0 = 1  
     addiu	$s1, $zero, 1   # $s1 = 1
