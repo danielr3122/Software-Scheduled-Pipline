@@ -218,110 +218,202 @@ architecture structure of MIPS_Processor is
 
   component IF_ID_Register is
     generic(N   : integer := 32);
-    port(i_CLK       : in std_logic,
-         i_RST       : in std_logic,
-         i_IMem      : in st_logic_vector(N-1 downto 0),
-         i_PCNext    : in st_logic_vector(N-1 downto 0),
-         o_IMem      : out st_logic_vector(N-1 downto 0),
-         o_PCNext    : out st_logic_vector(N-1 downto 0));
+    port(i_CLK              : in std_logic;
+         i_RST              : in std_logic;
+         i_IF_Inst          : in std_logic_vector(N-1 downto 0);
+         i_IF_PCNext        : in std_logic_vector(N-1 downto 0);
+         o_ID_Inst          : out std_logic_vector(N-1 downto 0);
+         o_ID_PCNext        : out std_logic_vector(N-1 downto 0));
   end component;
 
   component ID_EX_Register is
-    port(i_CLK               : in std_logic;
-         i_RST               : in std_logic;
-         i_PCNext            : in std_logic_vector(31 downto 0);
-         i_Halt              : in std_logic;
-         i_Write_Data_Sel    : in std_logic_vector(1 downto 0);
-         i_DMemWr            : in std_logic;
-         i_ALUsrc            : in std_logic;
-         i_RegDest           : in std_logic_vector(1 downto 0);
-         i_RegWr             : in std_logic;
-         i_ShiftType         : in std_logic_vector(1 downto 0);
-         i_ALUop             : in std_logic_vector(3 downto 0);
-         i_ALUslt            : in std_logic;
-         i_nAdd_Sub          : in std_logic;
-         i_UnsignedSelect    : in std_logic;
-         i_extendedImm       : in std_logic_vector(31 downto 0);
-         i_readData1         : in std_logic_vector(31 downto 0);
-         i_readData2         : in std_logic_vector(31 downto 0);
-         i_instr             : in std_logic_vector(31 downto 0);
-         o_PCNext            : out std_logic_vector(31 downto 0);
-         o_Halt              : out std_logic;
-         o_Write_Data_Sel    : out std_logic_vector(1 downto 0);
-         o_DMemWr            : out std_logic;
-         o_ALUsrc            : out std_logic;
-         o_RegDest           : out std_logic_vector(1 downto 0);
-         o_RegWr             : out std_logic;
-         o_ShiftType         : out std_logic_vector(1 downto 0);
-         o_ALUop             : out std_logic_vector(3 downto 0);
-         o_ALUslt            : out std_logic;
-         o_nAdd_Sub          : out std_logic;
-         o_UnsignedSelect    : out std_logic;
-         o_extendedImm       : out std_logic_vector(31 downto 0);
-         o_readData1         : out std_logic_vector(31 downto 0);
-         o_readData2         : out std_logic_vector(31 downto 0);
-         o_instr             : out std_logic_vector(31 downto 0));
+    port(i_CLK                  : in std_logic;
+         i_RST                  : in std_logic;
+         i_ID_PCNext            : in std_logic_vector(31 downto 0);
+         i_ID_Halt              : in std_logic;
+         i_ID_DMemWr            : in std_logic;
+         i_ID_Write_Data_Sel    : in std_logic_vector(1 downto 0);
+         i_ID_ALUsrc            : in std_logic;
+         i_ID_ShiftType         : in std_logic_vector(1 downto 0);
+         i_ID_ALUop             : in std_logic_vector(3 downto 0);
+         i_ID_ALUslt            : in std_logic;
+         i_ID_nAdd_Sub          : in std_logic;
+         i_ID_UnsignedSelect    : in std_logic;
+         i_ID_RegWr             : in std_logic;
+         i_ID_RegDest           : in std_logic_vector(1 downto 0);
+         i_ID_Inst              : in std_logic_vector(31 downto 0);
+         i_ID_extendedImm       : in std_logic_vector(31 downto 0);
+         i_ID_readData1         : in std_logic_vector(31 downto 0);
+         i_ID_readData2         : in std_logic_vector(31 downto 0);
+         o_EX_PCNext            : out std_logic_vector(31 downto 0);
+         o_EX_Halt              : out std_logic;
+         o_EX_DMemWr            : out std_logic;
+         o_EX_Write_Data_Sel    : out std_logic_vector(1 downto 0);
+         o_EX_RegWr             : out std_logic;
+         o_EX_readData1         : out std_logic_vector(31 downto 0);
+         o_EX_readData2         : out std_logic_vector(31 downto 0);
+         o_EX_extendedImm       : out std_logic_vector(31 downto 0);
+         o_EX_ALUsrc            : out std_logic;
+         o_EX_ShiftType         : out std_logic_vector(1 downto 0);
+         o_EX_ALUop             : out std_logic_vector(3 downto 0);
+         o_EX_ALUslt            : out std_logic;
+         o_EX_nAdd_Sub          : out std_logic;
+         o_EX_UnsignedSelect    : out std_logic;
+         o_EX_RegDest           : out std_logic_vector(1 downto 0);
+         o_EX_Inst              : out std_logic_vector(31 downto 0));
+  end component;
+
+  component EX_MEM_Register is
+    port(i_CLK                  : in std_logic;
+         i_RST                  : in std_logic;
+         i_EX_PCNext            : in std_logic_vector(31 downto 0);
+         i_EX_Halt              : in std_logic;
+         i_EX_DMemWr            : in std_logic;
+         i_EX_Write_Data_Sel    : in std_logic_vector(1 downto 0);
+         i_EX_RegWr             : in std_logic;
+         i_EX_Ovfl              : in std_logic;
+         i_EX_ALUout            : in std_logic_vector(31 downto 0);
+         i_EX_RegWrAddr         : in std_logic_vector(4 downto 0);
+         o_MEM_PCNext           : in std_logic_vector(31 downto 0);
+         o_MEM_Halt             : in std_logic;
+         o_MEM_DMemWr           : in std_logic;
+         o_MEM_Write_Data_Sel   : in std_logic_vector(1 downto 0);
+         o_MEM_RegWr            : in std_logic;
+         o_MEM_Ovfl             : in std_logic;
+         o_MEM_ALUout           : in std_logic_vector(31 downto 0);
+         o_MEM_RegWrAddr        : in std_logic_vector(4 downto 0));
+  end component;
+
+  component MEM_WB_Register is
+    generic(N   : integer := 32);
+    port(i_CLK                  : in std_logic;
+         i_RST                  : in std_logic;
+         i_MEM_PCNext           : in std_logic_vector(31 downto 0);
+         i_MEM_Halt             : in std_logic;
+         i_MEM_Write_Data_Sel   : in std_logic_vector(1 downto 0);
+         i_MEM_RegWr            : in std_logic;
+         i_MEM_Ovfl             : in std_logic;
+         i_MEM_ALUout           : in std_logic_vector(31 downto 0);
+         i_MEM_DMemOut          : in std_logic_vector(31 downto 0);
+         i_MEM_RegWrAddr        : in std_logic_vector(4 downto 0);
+         o_WB_Halt              : out std_logic;
+         o_WB_Ovfl              : out std_logic;
+         o_WB_ALUout            : out std_logic_vector(31 downto 0);
+         o_WB_Write_Data_Sel    : out std_logic_vector(1 downto 0);
+         o_WB_DMemOut           : out std_logic_vector(31 downto 0);
+         o_WB_PCNext            : out std_logic_vector(31 downto 0);
+         o_WB_RegWrAddr         : out std_logic_vector(4 downto 0);
+         o_WB_RegWr             : out std_logic);
   end component;
 
   -------------------------------------
-  ------- PC Addressing Signals -------
+  ----------- Fetch Signals -----------
   -------------------------------------
 
-  signal s_pcSelect         : std_logic;
-  signal s_sameData         : std_logic;
-  signal s_pcInput          : std_logic_vector(31 downto 0);
-  signal s_pcNext           : std_logic_vector(31 downto 0);
-  signal s_jumpAddr28       : std_logic_vector(27 downto 0);
-  signal s_jumpAddr32       : std_logic_vector(31 downto 0);
-  signal s_branchImmediate  : std_logic_vector(31 downto 0);
-  signal s_branchResult     : std_logic_vector(31 downto 0);
-  signal s_xor, s_and       : std_logic;
-  signal s_branchMuxOut, s_jumpMuxOut, s_muxToPC : std_logic_vector(31 downto 0);
+  signal s_jumpToPC,
+         s_IF_PCNext,
+         s_IF_Inst     : std_logic_vector(31 downto 0);
 
   -------------------------------------
-  -------- Control Unit Signals -------
-  -------------------------------------
-  
-  signal s_BranchType, 
-         s_BranchInstr, 
-         s_JumpInstr, 
-         s_JumpReg,
-         s_ALUsrc,
-         s_extSel       : std_logic;
-  signal s_Write_Data_Sel, 
-         s_RegDest      : std_logic_vector(1 downto 0);
-  signal s_ALUControlOp : std_logic_vector(4 downto 0);
-
-  -------------------------------------
-  --------- Sign Extend Signal --------
+  ---------- Decode Signals -----------
   -------------------------------------
 
-  signal s_extendedImmediate : std_logic_vector(31 downto 0);
+  signal s_ID_PCNext, 
+         s_ID_Inst,
+         s_ID_jumpAddr32,
+         s_ID_extendedImm,
+         s_ID_branchTarget,
+         s_ID_readData1,
+         s_ID_readData2,
+         s_ID_branchResult,
+         s_ID_branchMuxOut,
+         s_ID_jumpMuxOut,
+         s_ID_muxToPC : std_logic_vector(31 downto 0);
+
+  signal s_ID_BranchType,
+         s_ID_BranchInstr,
+         s_ID_JumpInstr,
+         s_ID_JumpReg,
+         s_ID_Halt,
+         s_ID_DMemWr,
+         s_ID_ALUsrc,
+         s_ID_ALUslt,
+         s_ID_nAdd_Sub,
+         s_ID_UnsignedSel,
+         s_ID_RegWr,
+         s_ID_extSel,
+         s_ID_xor,
+         s_ID_and,
+         s_ID_sameData : std_logic;
+
+  signal s_ID_Write_Data_Sel,
+         s_ID_ShiftType,
+         s_ID_RegDest : std_logic_vector(1 downto 0);
+
+  signal s_ID_ALUop : std_logic_vector(3 downto 0);
+
+  signal s_ID_jumpAddr28  : std_logic_vector(27 downto 0);
 
   -------------------------------------
-  ---------- ALU Control Unit ---------
+  ---------- Execute Signals ----------
   -------------------------------------
 
-  signal s_ShiftType    : std_logic_vector(1 downto 0);
-  signal s_ALUop        : std_logic_vector(3 downto 0);
-  signal s_ALUslt,
-         s_nAdd_Sub,
-         s_UnsignedSel  : std_logic;
+  signal s_EX_PCNext,
+         s_EX_readData1,
+         s_EX_readData2,
+         s_EX_extendedImm,
+         s_EX_Inst,
+         s_EX_ALUSrcMuxOut,
+         s_EX_ALUout : std_logic_vector(31 downto 0);
+
+  signal s_EX_Halt,
+         s_EX_DMemWr,
+         s_EX_RegWr,
+         s_EX_ALUsrc,
+         s_EX_ALUslt,
+         s_EX_nAdd_Sub,
+         s_EX_UnsignedSel,
+         s_EX_Ovfl : std_logic;
+
+  signal s_EX_Write_Data_Sel,
+         s_EX_ShiftType,
+         s_EX_RegDest
+
+  signal s_ID_ALUop : std_logic_vector(3 downto 0);
+
+  signal s_EX_RegWrAddr : std_logic_vector(4 downto 0);
 
   -------------------------------------
-  -------------- ALU  Unit ------------
+  ---------- Memory Signals -----------
   -------------------------------------
 
-  signal s_ALUzero      : std_logic;
-  signal s_ALUResult, -- TODO: attach to output
-         s_ALUSrcMuxOut : std_logic_vector(31 downto 0);
+  signal s_MEM_PCnext,
+         s_MEM_ALUout,
+         s_MEM_DMemData,  -- TODO: aka read data 2
+         s_MEM_DMemOut : std_logic_vector(31 downto 0);
+
+  signal s_MEM_Halt,
+         s_MEM_RegWr,
+         s_MEM_Ovfl,
+         s_MEM_DMemWr : std_logic;
+
+  signal s_MEM_Write_Data_Sel : std_logic_vector(1 downto 0);
+
+  signal s_MEM_DMemAddr,
+         s_MEM_RegWrAddr : std_logic_vector(4 downto 0);
 
   -------------------------------------
-  ------------ Register File ----------
+  -------- Write Back Signals ---------
   -------------------------------------
 
-  signal s_readData1,
-         s_readData2 : std_logic_vector(31 downto 0);
+  signal s_WB_Write_Data_Sel : std_logic_vector(1 downto 0);
+
+  signal s_WB_RegWr : std_logic;
+
+  signal s_WB_DMemOut,
+         s_WB_PCNext : std_logic_vector(31 downto 0);
+
+  signal s_WB_RegWrAddr : std_logic_vector(4 downto 0);
 
 begin
 
