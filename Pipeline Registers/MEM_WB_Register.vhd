@@ -15,6 +15,7 @@ entity MEM_WB_Register is
     generic(N   : integer := 32);
     port(i_CLK                  : in std_logic;
          i_RST                  : in std_logic;
+
          i_MEM_PCNext           : in std_logic_vector(31 downto 0);
          i_MEM_Halt             : in std_logic;
          i_MEM_Write_Data_Sel   : in std_logic_vector(1 downto 0);
@@ -23,6 +24,7 @@ entity MEM_WB_Register is
          i_MEM_ALUout           : in std_logic_vector(31 downto 0);
          i_MEM_DMemOut          : in std_logic_vector(31 downto 0);
          i_MEM_RegWrAddr        : in std_logic_vector(4 downto 0);
+         
          o_WB_Halt              : out std_logic;
          o_WB_Ovfl              : out std_logic;
          o_WB_ALUout            : out std_logic_vector(31 downto 0);

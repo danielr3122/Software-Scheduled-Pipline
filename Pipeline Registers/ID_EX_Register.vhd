@@ -131,6 +131,7 @@ architecture structural of ID_EX_Register is
                 o_Data      => ot_EX_ALUsrc);
 
         g_ShiftType: register_N
+            generic map(N => 2)
             port map(
                 i_Clock     => i_CLK,
                 i_Reset     => i_RST,
