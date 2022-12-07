@@ -379,7 +379,7 @@ architecture structure of MIPS_Processor is
 
   signal s_EX_Write_Data_Sel,
          s_EX_ShiftType,
-         s_EX_RegDest
+         s_EX_RegDest : std_logic_vector(1 downto 0);
 
   signal s_EX_ALUop : std_logic_vector(3 downto 0);
 
@@ -467,7 +467,7 @@ begin
     port map(i_d0 => s_ID_Inst(25 downto 0),
              o_o  => s_ID_jumpAddr28);
 
-  s_ID_jumpAddr32 <= s_ID_Inst(31 downto 28) && s_ID_jumpAddr28;
+  s_ID_jumpAddr32 <= s_ID_Inst(31 downto 28) & s_ID_jumpAddr28;
 
   g_ControlUnit: ControlUnit
     port map(i_opCode  => s_ID_Inst(31 downto 26),
@@ -495,7 +495,7 @@ begin
              o_data32    => s_ID_extendedImm);
 
   g_shiftLeftTwo32: shiftLeftTwo_32
-    port map(i_d0 => s_ID_extendedImm
+    port map(i_d0 => s_ID_extendedImm,
              o_o  => s_ID_branchTarget);
 
   g_BranchAdder: BranchAdder 
@@ -671,7 +671,7 @@ begin
              i_s  => s_WB_Write_Data_Sel,
              o_o  => s_RegWrData);
 
-  s_ALUout <= s_WB_ALUout;
+  oALUOut <= s_WB_ALUout;
 
 end structure;
 
