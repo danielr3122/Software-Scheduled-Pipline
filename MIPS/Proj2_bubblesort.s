@@ -33,6 +33,7 @@ loop1:
         nop
 
 		bne $t0, $t2, loop1
+        nop
 	
 add $t2, $zero, $s0
 addi $t0, $zero, 0
