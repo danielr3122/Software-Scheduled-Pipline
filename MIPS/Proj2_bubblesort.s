@@ -12,6 +12,7 @@ main:
 	j bubblesort
 
 bubblesort:
+    nop
 	addi $t0, $zero, 0	# i
 	addi $t1, $zero, 0	# j
 	addi $t2, $s1, -1
@@ -23,6 +24,7 @@ loop1:
 	j loop2
 
 	loop1cond:
+        nop
 		addi $t0, $t0, 1
         nop
         nop
@@ -73,6 +75,7 @@ loop2:
 	bne $t5, $zero, swap
 	
 	loop2cond:
+        nop
 		addi $t1, $t1, 1	# j++
 		addi $t3, $s1, -1	# x = n - 1
         nop
@@ -91,9 +94,11 @@ loop2:
 	j loop1cond
 	
 swap:
+    nop
 	sw $t6, 0($s3)
 	sw $t7, 0($s2)
 	j loop2cond
 
  exit:
+    nop
 	halt
