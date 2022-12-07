@@ -13,13 +13,12 @@ use IEEE.std_logic_1164.all;
 
 entity IF_ID_Register is
     generic(N   : integer := 32);
-    port(
-        i_CLK       : in std_logic,
-        i_RST       : in std_logic,
-        i_IMem      : in st_logic_vector(N-1 downto 0),
-        i_PCNext    : in st_logic_vector(N-1 downto 0),
-        o_IMem      : out st_logic_vector(N-1 downto 0),
-        o_PCNext    : out st_logic_vector(N-1 downto 0));
+    port(i_CLK       : in std_logic,
+         i_RST       : in std_logic,
+         i_IMem      : in st_logic_vector(N-1 downto 0),
+         i_PCNext    : in st_logic_vector(N-1 downto 0),
+         o_IMem      : out st_logic_vector(N-1 downto 0),
+         o_PCNext    : out st_logic_vector(N-1 downto 0));
 end IF_ID_Register;
 
 architecture structural of IF_ID_Register is

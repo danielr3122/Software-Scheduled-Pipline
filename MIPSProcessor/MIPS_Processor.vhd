@@ -213,6 +213,57 @@ architecture structure of MIPS_Processor is
   end component;
 
   -------------------------------------
+  -------- Pipeline Registers  --------
+  -------------------------------------
+
+  component IF_ID_Register is
+    generic(N   : integer := 32);
+    port(i_CLK       : in std_logic,
+         i_RST       : in std_logic,
+         i_IMem      : in st_logic_vector(N-1 downto 0),
+         i_PCNext    : in st_logic_vector(N-1 downto 0),
+         o_IMem      : out st_logic_vector(N-1 downto 0),
+         o_PCNext    : out st_logic_vector(N-1 downto 0));
+  end component;
+
+  component ID_EX_Register is
+    port(i_CLK               : in std_logic;
+         i_RST               : in std_logic;
+         i_PCNext            : in std_logic_vector(31 downto 0);
+         i_Halt              : in std_logic;
+         i_Write_Data_Sel    : in std_logic_vector(1 downto 0);
+         i_DMemWr            : in std_logic;
+         i_ALUsrc            : in std_logic;
+         i_RegDest           : in std_logic_vector(1 downto 0);
+         i_RegWr             : in std_logic;
+         i_ShiftType         : in std_logic_vector(1 downto 0);
+         i_ALUop             : in std_logic_vector(3 downto 0);
+         i_ALUslt            : in std_logic;
+         i_nAdd_Sub          : in std_logic;
+         i_UnsignedSelect    : in std_logic;
+         i_extendedImm       : in std_logic_vector(31 downto 0);
+         i_readData1         : in std_logic_vector(31 downto 0);
+         i_readData2         : in std_logic_vector(31 downto 0);
+         i_instr             : in std_logic_vector(31 downto 0);
+         o_PCNext            : out std_logic_vector(31 downto 0);
+         o_Halt              : out std_logic;
+         o_Write_Data_Sel    : out std_logic_vector(1 downto 0);
+         o_DMemWr            : out std_logic;
+         o_ALUsrc            : out std_logic;
+         o_RegDest           : out std_logic_vector(1 downto 0);
+         o_RegWr             : out std_logic;
+         o_ShiftType         : out std_logic_vector(1 downto 0);
+         o_ALUop             : out std_logic_vector(3 downto 0);
+         o_ALUslt            : out std_logic;
+         o_nAdd_Sub          : out std_logic;
+         o_UnsignedSelect    : out std_logic;
+         o_extendedImm       : out std_logic_vector(31 downto 0);
+         o_readData1         : out std_logic_vector(31 downto 0);
+         o_readData2         : out std_logic_vector(31 downto 0);
+         o_instr             : out std_logic_vector(31 downto 0));
+  end component;
+
+  -------------------------------------
   ------- PC Addressing Signals -------
   -------------------------------------
 
@@ -427,6 +478,41 @@ begin
   s_DMemData <= s_readData2;
 
   -- TODO: add id/ex reg
+  g_ID_EX: ID_EX_Register
+    port map(i_CLK              => i_CLK,
+             i_RST              => i_RST,
+             i_PCNext           => s_pcNext,
+             i_Halt             => s_Halt,
+             i_Write_Data_Sel   => 
+             i_DMemWr           =>
+             i_ALUsrc           =>
+             i_RegDest          =>
+             i_RegWr            =>
+             i_ShiftType        =>
+             i_ALUop            =>
+             i_ALUslt           =>
+             i_nAdd_Sub         =>
+             i_UnsignedSelect   =>
+             i_extendedImm      =>
+             i_readData1        =>
+             i_readData2        =>  
+             i_instr            =>
+             o_PCNext           =>
+             o_Halt             =>
+             o_Write_Data_Sel   =>
+             o_DMemWr           =>
+             o_ALUsrc           =>
+             o_RegDest          =>
+             o_RegWr            =>
+             o_ShiftType        =>
+             o_ALUop            =>
+             o_ALUslt           =>
+             o_nAdd_Sub         =>
+             o_UnsignedSelect   =>
+             o_extendedImm      =>
+             o_readData1        =>
+             o_readData2        =>
+             o_instr            =>);
 
 ----------------------------
 ------- Execute Stage ------

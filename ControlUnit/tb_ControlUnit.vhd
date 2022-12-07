@@ -22,28 +22,34 @@ end tb_ControlUnit;
 
 architecture mixed of tb_ControlUnit is
 
-    component ControlUnit is
-        port(i_opCode           : in std_logic_vector(5 downto 0);
-             i_funct            : in std_logic_vector(5 downto 0);
-             ALUControlOp       : out std_logic_vector(4 downto 0);
-             RegDest            : out std_logic_vector(1 downto 0);
-             RegWr              : out std_logic;
-             extSel             : out std_logic;
-             ALUsrc             : out std_logic;
-             BranchType         : out std_logic;
-             BranchInstr        : out std_logic;
-             JumpInstr          : out std_logic;
-             JumpReg            : out std_logic;
-             DMemWr             : out std_logic;
-             Write_Data_Sel     : out std_logic_vector(1 downto 0);
-             Halt               : out std_logic);
-
+    component ControlUnit is 
+    port(i_opCode           : in std_logic_vector(5 downto 0);
+         i_funct            : in std_logic_vector(5 downto 0);
+         shiftType          : out std_logic_vector(1 downto 0);
+         ALUop              : out std_logic_vector(3 downto 0);
+         ALUslt             : out std_logic;
+         nAdd_Sub           : out std_logic;
+         unsignedSel        : out std_logic;
+         RegDest            : out std_logic_vector(1 downto 0);
+         RegWr              : out std_logic;
+         extSel             : out std_logic;
+         ALUsrc             : out std_logic;
+         BranchType         : out std_logic;
+         BranchInstr        : out std_logic;
+         JumpInstr          : out std_logic;
+         JumpReg            : out std_logic;
+         DMemWr             : out std_logic;
+         Write_Data_Sel     : out std_logic_vector(1 downto 0);
+         Halt               : out std_logic);
     end component;
 
-    signal s_opCode, s_funct                : std_logic_vector(5 downto 0) := b"000000";
-    signal s_ALUControlOp                   : std_logic_vector(4 downto 0);
-    signal s_RegDest, s_Write_Data_Sel      : std_logic_vector(1 downto 0);
-    signal s_RegWr,
+    signal s_opCode, s_funct : std_logic_vector(5 downto 0) := b"000000";
+    signal s_RegDest, s_Write_Data_Sel, s_shiftType      : std_logic_vector(1 downto 0);
+    signal s_ALUop : std_logic_vector(3 downto 0);
+    signal s_ALUslt,
+           s_nAdd_Sub,
+           s_unsignedSel,
+           s_RegWr,
            s_extSel,
            s_ALUsrc,
            s_BranchType,
@@ -59,7 +65,11 @@ begin
     DUT0: ControlUnit
     port map(i_opCode       => s_opCode,
              i_funct        => s_funct,
-             ALUControlOp   => s_ALUControlOp,
+             shiftType      => s_shiftType,
+             ALUop          => s_ALUop,
+             ALUslt         => s_ALUslt,
+             nAdd_Sub       => s_nAdd_Sub,
+             unsignedSel    => s_unsignedSel,
              RegDest        => s_RegDest,
              RegWr          => s_RegWr,
              extSel         => s_extSel,
