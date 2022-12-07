@@ -20,12 +20,10 @@ bubblesort:
 	
 loop1:
     nop
-    nop
 	addi $t1, $zero, 0	# j
 	j loop2
 
 	loop1cond:
-        nop
         nop
 		addi $t0, $t0, 1
         nop
@@ -42,14 +40,11 @@ j  exit
 loop2:
 	# arr[j]
     nop
-    nop
-    nop
 	sll $s2, $t1, 2
     nop
     nop
     nop
 	add $s2, $s2, $s0
-    nop
     nop
     nop
 	lw $t6, 0($s2)
@@ -66,7 +61,6 @@ loop2:
 	add $s3, $s3, $s0
     nop
     nop
-    nop
 	lw $t7, 0($s3)
     nop
     nop
@@ -77,10 +71,8 @@ loop2:
     nop
     nop
 	bne $t5, $zero, swap
-	nop
 
 	loop2cond:
-        nop
         nop
 		addi $t1, $t1, 1	# j++
 		addi $t3, $s1, -1	# x = n - 1
