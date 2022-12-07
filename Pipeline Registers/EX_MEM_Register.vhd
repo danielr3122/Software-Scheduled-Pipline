@@ -19,17 +19,19 @@ entity EX_MEM_Register is
          i_EX_DMemWr            : in std_logic;
          i_EX_Write_Data_Sel    : in std_logic_vector(1 downto 0);
          i_EX_RegWr             : in std_logic;
+         i_EX_readData2         : in std_logic_vector(31 downto 0);
          i_EX_Ovfl              : in std_logic;
          i_EX_ALUout            : in std_logic_vector(31 downto 0);
          i_EX_RegWrAddr         : in std_logic_vector(4 downto 0);
-         o_MEM_PCNext           : in std_logic_vector(31 downto 0);
-         o_MEM_Halt             : in std_logic;
-         o_MEM_DMemWr           : in std_logic;
-         o_MEM_Write_Data_Sel   : in std_logic_vector(1 downto 0);
-         o_MEM_RegWr            : in std_logic;
-         o_MEM_Ovfl             : in std_logic;
-         o_MEM_ALUout           : in std_logic_vector(31 downto 0);
-         o_MEM_RegWrAddr        : in std_logic_vector(4 downto 0));
+         o_MEM_PCNext           : out std_logic_vector(31 downto 0);
+         o_MEM_Halt             : out std_logic;
+         o_MEM_DMemWr           : out std_logic;
+         o_MEM_Write_Data_Sel   : out std_logic_vector(1 downto 0);
+         o_MEM_RegWr            : out std_logic;
+         o_MEM_DMemData         : out std_logic_vector(31 downto 0);
+         o_MEM_Ovfl             : out std_logic;
+         o_MEM_ALUout           : out std_logic_vector(31 downto 0);
+         o_MEM_RegWrAddr        : out std_logic_vector(4 downto 0));
 end EX_MEM_Register;
 
 architecture structural of EX_MEM_Register is
@@ -84,6 +86,14 @@ architecture structural of EX_MEM_Register is
                 i_WriteEn   => '1',
                 i_Data      => i_EX_RegWr,
                 o_Data      => o_MEM_RegWr);
+        
+        g_ReadData2: register_N
+            port map(
+                i_Clock     => i_CLK,
+                i_Reset     => i_RST,
+                i_WriteEn   => '1',
+                i_Data      => i_EX_readData2,
+                o_Data      => o_MEM_DMemData);
         
         g_Ovfl: register_N
             port map(
