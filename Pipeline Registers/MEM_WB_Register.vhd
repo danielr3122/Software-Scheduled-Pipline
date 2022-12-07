@@ -11,7 +11,7 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 
-entity IF_ID_Register is
+entity MEM_WB_Register is
     generic(N   : integer := 32);
     port(i_CLK                  : in std_logic;
          i_RST                  : in std_logic;
@@ -31,9 +31,9 @@ entity IF_ID_Register is
          o_WB_PCNext            : out std_logic_vector(31 downto 0);
          o_WB_RegWrAddr         : out std_logic_vector(4 downto 0);
          o_WB_RegWr             : out std_logic);
-end IF_ID_Register;
+end MEM_WB_Register;
 
-architecture structural of IF_ID_Register is
+architecture structural of MEM_WB_Register is
 
     component register_N is
         generic(N : integer := 32);
