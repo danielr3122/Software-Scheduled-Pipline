@@ -17,8 +17,8 @@ entity IF_ID_Register is
          i_RST              : in std_logic,
          i_IF_Inst          : in st_logic_vector(N-1 downto 0),
          i_IF_PCNext        : in st_logic_vector(N-1 downto 0),
-         o_IF_Inst          : out st_logic_vector(N-1 downto 0),
-         o_IF_PCNext        : out st_logic_vector(N-1 downto 0));
+         o_ID_Inst          : out st_logic_vector(N-1 downto 0),
+         o_ID_PCNext        : out st_logic_vector(N-1 downto 0));
 end IF_ID_Register;
 
 architecture structural of IF_ID_Register is
@@ -40,7 +40,7 @@ architecture structural of IF_ID_Register is
                 i_Reset     => i_RST,
                 i_WriteEn   => '1',
                 i_Data      => i_IF_PCNext,
-                o_Data      => o_IF_PCNext);
+                o_Data      => o_ID_PCNext);
 
         g_IMemReg: register_N
         port map(
@@ -48,6 +48,6 @@ architecture structural of IF_ID_Register is
             i_Reset     => i_RST,
             i_WriteEn   => '1',
             i_Data      => i_IF_Inst,
-            o_Data      => o_IF_Inst);
+            o_Data      => o_ID_Inst);
 
 end structural;
